@@ -15,21 +15,16 @@ Example:
 Manual Installation procedure:
 
 Create folder :
-cd /
-mkdir /srv
-cd srv
-mkdir tftp
-
-put the phonebook.xml in /srv/tftp
+$ cd /
+$ mkdir /srv
+$ cd srv
+$ mkdir tftp
 
 Enable tftp service in dnsmasq:
 
-Edit  /etc/config/dhcp
+$ vi /etc/config/dhcp
 
-vi /etc/config/dhcp
-
-Navigate to end of configfile. Press "Insert" Key to edit/Insert Lines
-Append / Paste 
+You should see something like that:
 
 ----------------------------------------------------------------------
 config dhcp
@@ -50,12 +45,11 @@ config dhcp
 	option ignore '1'
 
 
+Navigate to end of configfile
+Press "Insert" Key 
 
+Append the following content:
 
-
-
-
-Append after the star-line
 *************************************
 
 config dnsmasq
@@ -63,25 +57,30 @@ config dnsmasq
  	option 'tftp_root' '/srv/tftp'
 
 **************************************
-
-  ---------------------------------------------------------------------
   
   Press "ESC" key and then :
   with wq write and exit configuration
     
- To activate the service reboot node or use command:  service dnsmasq restart
+ To activate the service:
+ $ service dnsmasq restart
+ or reboot the router
  
+ Initiate first copy of phonebook
  
- Ongoing:
- 
+ $ curl --output  /srv/tftp/phonebook.xml -O http://hb-aredn-srvt01.local.mesh/phonebook/phonebook.xml
+  
  Sync of Source XML, cronjob description for meshrouter (synchjob with check of changes) and a Routine to Install all nessesery Files, Configs, Jobs - is in work
  
- Periodical sync can defined as a cronjob:
+ Periodical phone book sync as a cronjob:
  
- crontab -e
+ $ crontab -e
+ 
+ press "ins" key and paste the next lines at the end:
 
 */60 * * * * curl --output  /srv/tftp/phonebook.xml -O http://hb-aredn-srvt01.local.mesh/phonebook/phonebook.xml
 #---------------------------------------------------------------------------------------------------------------
+
+press "esc", and ":wq"
 
 This will execute every 60min a synch and place the phonebook in /srv/tftp/phonebook.xml  on the (localhost.local.mesh) or on the node, that the Yealink is connected.
 
